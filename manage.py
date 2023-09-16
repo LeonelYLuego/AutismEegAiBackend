@@ -1,7 +1,7 @@
 import os
 
 from app.main import create_app
-from app.main.model import user
+from app.main.model import *
 
 app = create_app(os.getenv('BOILERPLATE_ENV') or 'dev')
 
