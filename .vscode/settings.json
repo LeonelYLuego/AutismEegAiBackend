@@ -6,9 +6,29 @@
         "**/CVS": true,
         "**/.DS_Store": true,
         "**/Thumbs.db": true,
-        "env": true
+        ".vscode": true,
+        "dist": true,
+        "node_modules": true,
+        "test": true,
+        ".eslintrc.js": true,
+        ".prettierrc": true,
+        "nest-cli.json": true,
+        "package-lock.json": true,
+        "tsconfig.build.json": true
     },
     "hide-files.files": [
-        "env"
+        ".vscode",
+        "dist",
+        "node_modules",
+        "test",
+        ".eslintrc.js",
+        ".prettierrc",
+        "nest-cli.json",
+        "package-lock.json",
+        "tsconfig.build.json"
+    ],
+    "cSpell.words": [
+        "postgres",
+        "typeorm"
     ]
 }

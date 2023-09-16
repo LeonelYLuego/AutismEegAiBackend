@@ -1,0 +1,36 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { Patient } from '@patients/entities/patient.entity';
+import {
+  Column,
+  Entity,
+  CreateDateColumn,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+} from 'typeorm';
+
+@Entity()
+export class Study {
+  @ApiProperty()
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  // @ApiProperty({
+  //   type: Patient,
+  // })
+  @ManyToOne(() => Patient, (patient) => patient.id)
+  patient: Patient;
+
+  @ApiProperty()
+  @CreateDateColumn()
+  created_on: Date;
+
+  @ApiProperty({
+    maxLength: 128,
+    required: false,
+  })
+  @Column({
+    length: 128,
+    nullable: true,
+  })
+  result: string | null;
+}
