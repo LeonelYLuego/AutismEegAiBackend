@@ -1,11 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Patient } from '@patients/entities/patient.entity';
+import { Wave } from '@waves/entities/wave.entity';
 import {
   Column,
   Entity,
   CreateDateColumn,
   PrimaryGeneratedColumn,
   ManyToOne,
+  OneToMany,
 } from 'typeorm';
 
 @Entity()
@@ -33,4 +35,7 @@ export class Study {
     nullable: true,
   })
   result: string | null;
+
+  @OneToMany(() => Wave, (wave) => wave.study)
+  waves: Wave[];
 }

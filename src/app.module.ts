@@ -7,6 +7,7 @@ import { NestModule } from '@nestjs/common/interfaces/modules';
 import { AuthMiddleware } from '@auth/auth/auth.middleware';
 import { PatientsModule } from './modules/patients/patients.module';
 import { StudiesModule } from './modules/studies/studies.module';
+import { WavesModule } from './modules/waves/waves.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { StudiesModule } from './modules/studies/studies.module';
     AuthModule,
     PatientsModule,
     StudiesModule,
+    WavesModule,
   ],
   controllers: [],
   providers: [],
