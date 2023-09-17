@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Patient } from '@patients/entities/patient.entity';
-import { Wave } from '@waves/entities/wave.entity';
+import { ResponseWaveDto } from '@waves/dto/response-wave.dto';
 import {
   Column,
   Entity,
@@ -36,6 +36,9 @@ export class Study {
   })
   result: string | null;
 
-  @OneToMany(() => Wave, (wave) => wave.study)
-  waves: Wave[];
+  @ApiProperty({
+    type: ResponseWaveDto,
+    isArray: true,
+  })
+  waves: ResponseWaveDto[];
 }

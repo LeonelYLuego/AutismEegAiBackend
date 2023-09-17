@@ -3,17 +3,19 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
-  Delete,
+  UseInterceptors,
+  UploadedFile,
+  ParseFilePipe,
+  FileTypeValidator,
 } from '@nestjs/common';
 import { StudiesService } from './studies.service';
 import { CreateStudyDto } from './dto/create-study.dto';
-import { UpdateStudyDto } from './dto/update-study.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Doc } from '@utils/decorators/doc.decorator';
 import { Study } from './entities/study.entity';
 import { HttpResponse } from '@utils/dto/http-response.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Studies')
 @Controller('studies')
@@ -21,18 +23,28 @@ export class StudiesController {
   constructor(private readonly studiesService: StudiesService) {}
 
   @Post(':patient_id')
+  @ApiConsumes('multipart/form-data')
   @Doc({
     summary: 'Create a `Study`',
     description:
-      'Creates a new `Study` in the database for the provided `Patient`',
+    'Creates a new `Study` in the database for the provided `Patient`',
     errorStatus: ['400', '404'],
     http201: Study,
   })
+  @UseInterceptors(FileInterceptor('csv'))
   async create(
     @Param('patient_id') patient_id: string,
+    @Body() createStudyDto: CreateStudyDto,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new FileTypeValidator({ fileType: 'csv' }),
+        ]
+      })
+    ) csv: Express.Multer.File,
   ): Promise<HttpResponse<Study>> {
     return {
-      data: await this.studiesService.create(patient_id),
+      data: await this.studiesService.create(patient_id, csv),
     };
   }
 

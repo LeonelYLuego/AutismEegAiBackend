@@ -1,11 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Study } from "@studies/entities/study.entity";
-import { Column, ManyToOne } from "typeorm";
+import { Column } from "typeorm";
 
-export class CreateWaveDto {
+export class ResponseWaveDto {
   @ApiProperty()
-  @ManyToOne(() => Study, (study) => study.id)
-  study: Study;
+  @Column({
+    type: 'string',
+  }) 
+  id: string;
 
   @ApiProperty()
   @Column({
