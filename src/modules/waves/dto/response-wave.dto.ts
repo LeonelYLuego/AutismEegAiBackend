@@ -1,11 +1,11 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Column } from "typeorm";
+import { ApiProperty } from '@nestjs/swagger';
+import { Column } from 'typeorm';
 
 export class ResponseWaveDto {
   @ApiProperty()
   @Column({
     type: 'string',
-  }) 
+  })
   id: string;
 
   @ApiProperty()

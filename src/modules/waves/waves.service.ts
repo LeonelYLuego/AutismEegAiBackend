@@ -9,21 +9,26 @@ import { Study } from '@studies/entities/study.entity';
 
 @Injectable()
 export class WavesService {
-  constructor(@InjectRepository(Wave) private wavesRepository: Repository<Wave>) {}
+  constructor(
+    @InjectRepository(Wave) private wavesRepository: Repository<Wave>,
+  ) {}
 
-  async create(createWaveDtos: CreateWaveDto[]) {
-    // Save all waves
-    const waves = await this.wavesRepository.save(createWaveDtos, { chunk: 1000 });
-    // Parse all waves to response dtos
-    const response = waves.map((wave) => {
-      // Delete study from wave
-      delete wave.study;
-      const responseWaveDto = new ResponseWaveDto();
-      Object.assign(responseWaveDto, wave);
-      return responseWaveDto;
-    });
-    // Return response dtos
-    return response;
+  async create(createWavesDto: CreateWaveDto) : Promise<Wave> {
+    // // Save all waves
+    // const waves = await this.wavesRepository.save(createWavesDto, {
+    //   chunk: 1000,
+    // });
+    // // Parse all waves to response dtos
+    // const response = waves.map((wave) => {
+    //   // Delete study from wave
+    //   delete wave.study;
+    //   const responseWaveDto = new ResponseWaveDto();
+    //   Object.assign(responseWaveDto, wave);
+    //   return responseWaveDto;
+    // });
+    // // Return response dtos
+    // return response;
+    return this.wavesRepository.save(createWavesDto);
   }
 
   async findAll(study: Study): Promise<Wave[]> {

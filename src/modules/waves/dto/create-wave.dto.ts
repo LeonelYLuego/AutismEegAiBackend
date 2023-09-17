@@ -1,6 +1,6 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Study } from "@studies/entities/study.entity";
-import { Column, ManyToOne } from "typeorm";
+import { ApiProperty } from '@nestjs/swagger';
+import { Study } from '@studies/entities/study.entity';
+import { Column, ManyToOne } from 'typeorm';
 
 export class CreateWaveDto {
   @ApiProperty()

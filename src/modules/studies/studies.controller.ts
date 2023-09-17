@@ -16,6 +16,7 @@ import { Doc } from '@utils/decorators/doc.decorator';
 import { Study } from './entities/study.entity';
 import { HttpResponse } from '@utils/dto/http-response.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ResponseStudyDto } from './dto/response-study.dto';
 
 @ApiTags('Studies')
 @Controller('studies')
@@ -27,7 +28,7 @@ export class StudiesController {
   @Doc({
     summary: 'Create a `Study`',
     description:
-    'Creates a new `Study` in the database for the provided `Patient`',
+      'Creates a new `Study` in the database for the provided `Patient`',
     errorStatus: ['400', '404'],
     http201: Study,
   })
@@ -37,11 +38,10 @@ export class StudiesController {
     @Body() createStudyDto: CreateStudyDto,
     @UploadedFile(
       new ParseFilePipe({
-        validators: [
-          new FileTypeValidator({ fileType: 'csv' }),
-        ]
-      })
-    ) csv: Express.Multer.File,
+        validators: [new FileTypeValidator({ fileType: 'csv' })],
+      }),
+    )
+    csv: Express.Multer.File,
   ): Promise<HttpResponse<Study>> {
     return {
       data: await this.studiesService.create(patient_id, csv),
@@ -54,11 +54,11 @@ export class StudiesController {
     description:
       'Finds in the database all `Studies` of the provided `Patient`',
     errorStatus: ['404'],
-    http200: [Study],
+    http200: [ResponseStudyDto],
   })
   async findAll(
     @Param('patient_id') patient_id: string,
-  ): Promise<HttpResponse<Study[]>> {
+  ): Promise<HttpResponse<ResponseStudyDto[]>> {
     return {
       data: await this.studiesService.findAll(patient_id),
     };

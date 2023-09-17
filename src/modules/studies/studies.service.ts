@@ -9,7 +9,6 @@ import { Patient } from '@patients/entities/patient.entity';
 import { CreateWaveDto } from '@waves/dto/create-wave.dto';
 import { WavesService } from '@waves/waves.service';
 
-
 @Injectable()
 export class StudiesService {
   constructor(
@@ -18,37 +17,34 @@ export class StudiesService {
     private wavesService: WavesService,
   ) {}
 
-  async getWavesFromCsv(
-    csv: Express.Multer.File, 
+  private async saveWaves(
+    csv: Express.Multer.File,
     study: Study,
-    ): Promise<CreateWaveDto[]> {
+  ): Promise<void> {
     const stream = Readable.from(csv.buffer.toString());
-    const data = [];
-    
-    await new Promise((resolve, reject) => {
+
+    await new Promise<void>((resolve, reject) => {
       fastcsv
         .parseStream(stream, { headers: true })
-        .on('data', (row) => {
+        .on('data', async (row: any) => {
           // Check if row is empty
           if (Object.keys(row).length === 0) return;
-          // Parse all colum names to lowercase 
-          Object.keys(row).forEach(function(key) {
+          // // Parse all colum names to lowercase
+          Object.keys(row).forEach(function (key) {
             row[key.toLowerCase()] = row[key];
             delete row[key];
           });
           // Add study id to row
           row.study = study;
-          // Parse the row to a wave dto
-          const wave = new CreateWaveDto();
-          Object.assign(wave, row);
-          // Add the wave to the data array
-          data.push(wave);
-        })
-        .on('error', error => reject(error))
-        .on('end', () => resolve(data));
-    });
 
-    return data;
+          // Add Wave in the database
+          await this.wavesService.create(row as CreateWaveDto);
+        })
+        .on('error', (error) => reject(error))
+        .on('end', () => {
+          resolve();
+        });
+    });
   }
 
   async create(patient_id: string, csv: Express.Multer.File): Promise<Study> {
@@ -58,16 +54,10 @@ export class StudiesService {
     });
 
     // Get data from csv
-    const data = await this.getWavesFromCsv(csv, study);
+    await this.saveWaves(csv, study);
 
-    // Create the waves for the study
-    const waves = await this.wavesService.create(data);
-    
-    const retStudy = await this.findOne(study.id);
-    // Add the waves to the study
-    retStudy.waves = waves;
-
-    return retStudy;
+    // return retStudy;
+    return await this.findOne(study.id);
   }
 
   async findAll(patient_id: string): Promise<Study[]> {
@@ -76,6 +66,9 @@ export class StudiesService {
       where: {
         patient,
       },
+      order: {
+        created_on: 'DESC'
+      }
     });
   }
 
@@ -88,6 +81,9 @@ export class StudiesService {
         where: {
           id,
           patient,
+        },
+        relations: {
+          waves: true,
         },
       });
       if (study) return study;

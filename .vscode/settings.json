@@ -28,6 +28,7 @@
         "tsconfig.build.json"
     ],
     "cSpell.words": [
+        "fastcsv",
         "postgres",
         "typeorm"
     ]
