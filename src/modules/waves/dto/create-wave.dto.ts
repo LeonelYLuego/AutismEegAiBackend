@@ -11,6 +11,12 @@ export class CreateWaveDto {
   @Column({
     type: 'float',
   })
+  time: number;
+
+  @ApiProperty()
+  @Column({
+    type: 'float',
+  })
   fp1: number;
 
   @ApiProperty()
