@@ -43,8 +43,8 @@ export class StudiesService {
           // Add time to row
           row.time = time;
 
-          // Add 1/8 to time
-          time += 0.125;
+          // Add 1/16 to time
+          time += 0.0625;
 
           // Add Wave in the database
           await this.wavesService.create(row as CreateWaveDto);
