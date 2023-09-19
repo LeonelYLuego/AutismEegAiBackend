@@ -24,6 +24,9 @@ export class StudiesService {
     const stream = Readable.from(csv.buffer.toString());
 
     await new Promise<void>((resolve, reject) => {
+
+      let time:number = 0;
+
       fastcsv
         .parseStream(stream, { headers: true })
         .on('data', async (row: any) => {
@@ -36,6 +39,12 @@ export class StudiesService {
           });
           // Add study id to row
           row.study = study;
+
+          // Add time to row
+          row.time = time;
+
+          // Add 1/8 to time
+          time += 0.125;
 
           // Add Wave in the database
           await this.wavesService.create(row as CreateWaveDto);
