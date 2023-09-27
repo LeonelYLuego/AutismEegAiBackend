@@ -35,7 +35,12 @@ export class PatientsService {
   //   return `This action updates a #${id} patient`;
   // }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} patient`;
-  // }
+  async remove(id: string): Promise<string> {
+    try {
+      const patient = await this.findOne(id);
+      await this.patientsRepository.remove(patient);
+      return "Patient deleted successfully."
+    } catch {}
+    throw new NotFoundException('Error deleting patient.');
+  }
 }
