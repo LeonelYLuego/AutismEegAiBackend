@@ -100,10 +100,6 @@ export class StudiesService {
     throw new NotFoundException('Study not found.');
   }
 
-  // update(id: number, updateStudyDto: UpdateStudyDto) {
-  //   return `This action updates a #${id} study`;
-  // }
-
   async remove(id: string, patient_id: string): Promise<string> {
     try{
       const study = await this.findOne(id, patient_id);
