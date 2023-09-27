@@ -31,9 +31,14 @@ export class PatientsService {
     throw new NotFoundException('Patient not found.');
   }
 
-  // update(id: number, updatePatientDto: UpdatePatientDto) {
-  //   return `This action updates a #${id} patient`;
-  // }
+  async update(id: string, updatePatientDto: CreatePatientDto) {
+    try{
+      await this.patientsRepository.update(id, updatePatientDto);
+      return await this.findOne(id);
+    }
+    catch{}
+    throw new NotFoundException('Error updating patient.');
+  }
 
   async remove(id: string): Promise<string> {
     try {

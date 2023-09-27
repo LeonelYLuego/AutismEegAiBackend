@@ -3,7 +3,7 @@ import {
   Get,
   Post,
   Body,
-  Patch,
+  Put,
   Param,
   Delete,
 } from '@nestjs/common';
@@ -61,10 +61,18 @@ export class PatientsController {
     };
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updatePatientDto: UpdatePatientDto) {
-  //   return this.patientsService.update(+id, updatePatientDto);
-  // }
+  @Put(':id')
+  @Doc({
+    summary: 'Update a `Patient`',
+    description: 'Updates a `Patient` in the database based on the provided `id`',
+    errorStatus: ['404'],
+    http200: Patient,
+  })
+  async update(@Param('id') id: string, @Body() updatePatientDto: CreatePatientDto) {
+    return {
+      data: await this.patientsService.update(id, updatePatientDto),
+    }
+  }
 
   @Delete(':id')
   @Doc({
