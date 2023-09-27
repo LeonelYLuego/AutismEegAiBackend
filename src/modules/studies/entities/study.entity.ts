@@ -40,6 +40,10 @@ export class Study {
   @ApiProperty({
     type: [ResponseWaveDto],
   })
-  @OneToMany(() => Wave, (wave) => wave.study)
+
+  @OneToMany(() => Wave, (wave) => wave.study, {
+    cascade: ['remove'],
+    onDelete: 'CASCADE',
+  })
   waves: Wave[];
 }
