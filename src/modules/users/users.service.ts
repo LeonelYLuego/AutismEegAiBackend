@@ -8,6 +8,7 @@ import { FindOneOptions, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -44,11 +45,24 @@ export class UsersService {
     return await this.usersRepository.findOne(options);
   }
 
-  // update(id: number, updateUserDto: UpdateUserDto) {
-  //   return `This action updates a #${id} user`;
-  // }
+  async update(updateUserDto: UpdateUserDto, currentUser: User): Promise<User> {
+    let passwordHash: string | undefined;
+    if (updateUserDto.password) {
+      const salt = await bcrypt.genSalt();
+      passwordHash = await bcrypt.hash(updateUserDto.password, salt);
+      delete updateUserDto.password;
+    }
+    await this.usersRepository.update(
+      { id: currentUser.id },
+      {
+        passwordHash,
+        ...updateUserDto,
+      },
+    );
+    return await this.findOne(currentUser.id);
+  }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} user`;
-  // }
+  async remove(): Promise<void> {
+    await this.usersRepository.delete({});
+  }
 }

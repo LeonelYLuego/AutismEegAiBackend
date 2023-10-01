@@ -81,24 +81,19 @@ export class StudiesController {
     };
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateStudyDto: UpdateStudyDto) {
-  //   return this.studiesService.update(+id, updateStudyDto);
-  // }
-
   @Delete(':patient_id/:id')
   @Doc({
     summary: 'Delete a `Study`',
-    description: 'Deletes a `Study` from the database based on the provided `id`',
+    description:
+      'Deletes a `Study` from the database based on the provided `id`',
     errorStatus: ['404'],
     http200: String,
   })
   async remove(
     @Param('patient_id') patient_id: string,
-    @Param('id') id: string
-    ): Promise<HttpResponse<string>> {
-    return {
-      data: await this.studiesService.remove(id, patient_id),
-    };
+    @Param('id') id: string,
+  ): Promise<HttpResponse<void>> {
+    await this.studiesService.remove(id, patient_id);
+    return {};
   }
 }

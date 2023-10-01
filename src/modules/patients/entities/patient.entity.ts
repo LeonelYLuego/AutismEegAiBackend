@@ -20,6 +20,6 @@ export class Patient {
   @Column()
   age: number;
 
-  @OneToMany(() => Study, (study) => study.patient)
-  studies: Study[];
+  // @OneToMany(() => Study, (study) => study.patient)
+  // studies: Study[];
 }

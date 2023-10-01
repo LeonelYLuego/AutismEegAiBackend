@@ -24,8 +24,7 @@ export class StudiesService {
     const stream = Readable.from(csv.buffer.toString());
 
     await new Promise<void>((resolve, reject) => {
-
-      let time:number = 0;
+      let time: number = 0;
 
       fastcsv
         .parseStream(stream, { headers: true })
@@ -76,8 +75,8 @@ export class StudiesService {
         patient,
       },
       order: {
-        created_on: 'DESC'
-      }
+        created_on: 'DESC',
+      },
     });
   }
 
@@ -100,15 +99,12 @@ export class StudiesService {
     throw new NotFoundException('Study not found.');
   }
 
-  async remove(id: string, patient_id: string): Promise<string> {
-    try{
-      const study = await this.findOne(id, patient_id);
-      if(study) console.log("Study found", study.id);
-      await this.studiesRepository.delete(study.id);
-      return "Study deleted successfully."
-    } catch(error){
-      console.log(error);
+  async remove(id: string, patient_id: string): Promise<void> {
+    await this.findOne(id, patient_id);
+    try {
+      await this.studiesRepository.delete(id);
+    } catch (error) {
+      throw new NotFoundException('Study not deleted.');
     }
-    throw new NotFoundException('Error deleting study.');
   }
 }

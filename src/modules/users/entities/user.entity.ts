@@ -28,7 +28,7 @@ export class User {
   })
   @Column({
     length: 128,
-    select: false
+    select: false,
   })
   passwordHash: string;
 }

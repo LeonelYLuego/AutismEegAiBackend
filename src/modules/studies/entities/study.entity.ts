@@ -20,7 +20,9 @@ export class Study {
   // @ApiProperty({
   //   type: Patient,
   // })
-  @ManyToOne(() => Patient, (patient) => patient.id)
+  @ManyToOne(() => Patient, (patient) => patient.id, {
+    onDelete: 'CASCADE',
+  })
   patient: Patient;
 
   @ApiProperty()
@@ -40,10 +42,6 @@ export class Study {
   @ApiProperty({
     type: [ResponseWaveDto],
   })
-
-  @OneToMany(() => Wave, (wave) => wave.study, {
-    cascade: ['remove'],
-    onDelete: 'CASCADE',
-  })
+  @OneToMany(() => Wave, (wave) => wave.study)
   waves: Wave[];
 }
