@@ -21,9 +21,9 @@ export class CreateUserDto {
     maxLength: 128,
   })
   @IsString()
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/, {
-    message:
-      'Invalid Password, minimum eight characters, at least one uppercase letter, one lowercase letter and one number.',
-  })
+  // @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/, {
+  //   message:
+  //     'Invalid Password, minimum eight characters, at least one uppercase letter, one lowercase letter and one number.',
+  // })
   password: string;
 }
