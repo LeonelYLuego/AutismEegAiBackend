@@ -9,9 +9,7 @@ export class Wave {
   id: string;
 
   @ApiProperty()
-  @ManyToOne(() => Study, (study) => study.id, {
-    onDelete: 'CASCADE'
-  })
+  @ManyToOne(() => Study, (study) => study.id)
   study: Study;
 
   @ApiProperty()

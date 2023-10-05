@@ -64,30 +64,26 @@ export class PatientsController {
   @Put(':id')
   @Doc({
     summary: 'Update a `Patient`',
-    description:
-      'Updates a `Patient` in the database based on the provided `id`',
+    description: 'Updates a `Patient` in the database based on the provided `id`',
     errorStatus: ['404'],
     http200: Patient,
   })
-  async update(
-    @Param('id') id: string,
-    @Body() updatePatientDto: UpdatePatientDto,
-  ) {
+  async update(@Param('id') id: string, @Body() updatePatientDto: CreatePatientDto) {
     return {
       data: await this.patientsService.update(id, updatePatientDto),
-    };
+    }
   }
 
   @Delete(':id')
   @Doc({
     summary: 'Delete a `Patient`',
-    description:
-      'Deletes a `Patient` from the database based on the provided `id`',
+    description: 'Deletes a `Patient` from the database based on the provided `id`',
     errorStatus: ['404'],
     http200: String,
   })
-  async remove(@Param('id') id: string): Promise<HttpResponse<void>> {
-    await this.patientsService.remove(id);
-    return {};
+  async remove(@Param('id') id: string): Promise<HttpResponse<string>> {
+    return {
+      data: await this.patientsService.remove(id),
+    };
   }
 }

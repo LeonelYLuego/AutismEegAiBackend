@@ -31,21 +31,21 @@ export class PatientsService {
     throw new NotFoundException('Patient not found.');
   }
 
-  async update(id: string, updatePatientDto: UpdatePatientDto) {
-    await this.findOne(id);
-    try {
+  async update(id: string, updatePatientDto: CreatePatientDto) {
+    try{
       await this.patientsRepository.update(id, updatePatientDto);
       return await this.findOne(id);
-    } catch {}
-    throw new NotFoundException('Patient not updated.');
+    }
+    catch{}
+    throw new NotFoundException('Error updating patient.');
   }
 
-  async remove(id: string): Promise<void> {
-    await this.findOne(id);
+  async remove(id: string): Promise<string> {
     try {
-      await this.patientsRepository.delete({ id });
-    } catch {
-      throw new NotFoundException('Patient not deleted.');
-    }
+      const patient = await this.findOne(id);
+      await this.patientsRepository.remove(patient);
+      return "Patient deleted successfully."
+    } catch {}
+    throw new NotFoundException('Error deleting patient.');
   }
 }
