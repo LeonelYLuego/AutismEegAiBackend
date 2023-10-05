@@ -24,6 +24,8 @@ export class StudiesService {
     const stream = Readable.from(csv.buffer.toString());
 
     await new Promise<void>((resolve, reject) => {
+      let time: number = 0;
+
       fastcsv
         .parseStream(stream, { headers: true })
         .on('data', async (row: any) => {
@@ -36,6 +38,12 @@ export class StudiesService {
           });
           // Add study id to row
           row.study = study;
+
+          // Add time to row
+          row.time = time;
+
+          // Add 1/16 to time
+          time += 0.0625;
 
           // Add Wave in the database
           await this.wavesService.create(row as CreateWaveDto);
@@ -67,8 +75,8 @@ export class StudiesService {
         patient,
       },
       order: {
-        created_on: 'DESC'
-      }
+        created_on: 'DESC',
+      },
     });
   }
 
@@ -91,11 +99,12 @@ export class StudiesService {
     throw new NotFoundException('Study not found.');
   }
 
-  // update(id: number, updateStudyDto: UpdateStudyDto) {
-  //   return `This action updates a #${id} study`;
-  // }
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} study`;
-  // }
+  async remove(id: string, patient_id: string): Promise<void> {
+    await this.findOne(id, patient_id);
+    try {
+      await this.studiesRepository.delete(id);
+    } catch (error) {
+      throw new NotFoundException('Study not deleted.');
+    }
+  }
 }

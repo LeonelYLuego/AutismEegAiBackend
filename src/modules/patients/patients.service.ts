@@ -31,11 +31,21 @@ export class PatientsService {
     throw new NotFoundException('Patient not found.');
   }
 
-  // update(id: number, updatePatientDto: UpdatePatientDto) {
-  //   return `This action updates a #${id} patient`;
-  // }
+  async update(id: string, updatePatientDto: UpdatePatientDto) {
+    await this.findOne(id);
+    try {
+      await this.patientsRepository.update(id, updatePatientDto);
+      return await this.findOne(id);
+    } catch {}
+    throw new NotFoundException('Patient not updated.');
+  }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} patient`;
-  // }
+  async remove(id: string): Promise<void> {
+    await this.findOne(id);
+    try {
+      await this.patientsRepository.delete({ id });
+    } catch {
+      throw new NotFoundException('Patient not deleted.');
+    }
+  }
 }

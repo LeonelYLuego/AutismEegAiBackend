@@ -20,7 +20,9 @@ export class Study {
   // @ApiProperty({
   //   type: Patient,
   // })
-  @ManyToOne(() => Patient, (patient) => patient.id)
+  @ManyToOne(() => Patient, (patient) => patient.id, {
+    onDelete: 'CASCADE',
+  })
   patient: Patient;
 
   @ApiProperty()
