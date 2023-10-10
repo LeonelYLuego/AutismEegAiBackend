@@ -27,7 +27,47 @@ export class StudiesService {
     },
     study: Study,
   ): Promise<void> {
-    
+
+    // Iterate over files
+    for (const [key, file] of Object.entries(files)) {
+      // Get wave type from key
+      const waveType = key as keyof typeof files;
+      const stream = Readable.from(files[waveType].buffer.toString());
+
+      await new Promise<void>((resolve, reject) => {
+
+        fastcsv
+          .parseStream(stream, { headers: true })
+          .on('data', async (row: any) => {
+            console.log(row);
+            // Delete Epoch, Event Id, Event Date, Event Duration columns
+            delete row.epoch;
+            delete row.event_id;
+            delete row.event_date;
+            delete row.event_duration;
+
+            // Check if row is empty
+            if (Object.keys(row).length === 0) return;
+            // Parse all colum names to lowercase
+            Object.keys(row).forEach(function (key) {
+              row[key.toLowerCase()] = row[key];
+              delete row[key];
+            });
+            // Add study id to row
+            row.study = study;
+
+            // Add wave type to row
+            row.type = waveType;
+
+            // Add Wave in the database
+            // await this.wavesService.create(row as CreateWaveDto);
+          })
+          .on('error', (error) => reject(error))
+          .on('end', () => {
+            resolve();
+          });
+      });
+    }
   }
 
   async create(

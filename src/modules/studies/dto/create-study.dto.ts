@@ -1,10 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateStudyDto {
-    @ApiProperty({
-        type: 'string',
-        format: 'binary',
-        description: 'The csv file to upload',
-    })
-    csv: Express.Multer.File;
+    // Create a api property for multiple csv files
+    @ApiProperty({ type: 'string', format: 'binary' })
+    alfa: any;
+    @ApiProperty({ type: 'string', format: 'binary' })
+    beta: any;
+    @ApiProperty({ type: 'string', format: 'binary' })
+    gamma: any;
+    @ApiProperty({ type: 'string', format: 'binary' })
+    delta: any;
+    @ApiProperty({ type: 'string', format: 'binary' })
+    theta: any;
+    
 }
