@@ -43,18 +43,13 @@ export class StudiesController {
   async create(
     @Param('patient_id') patient_id: string,
     @Body() createStudyDto: CreateStudyDto,
-    @UploadedFiles(
-      new ParseFilePipe({
-        validators: [new FileTypeValidator({ fileType: 'csv' })],
-      }),
-    )
-    files: {
+    @UploadedFiles()files : {
       alfa: Express.Multer.File;
       beta: Express.Multer.File;
       gamma: Express.Multer.File;
       delta: Express.Multer.File;
       theta: Express.Multer.File;
-    },
+    }
   ): Promise<HttpResponse<Study>> {
     return {
       data: await this.studiesService.create(patient_id, files),

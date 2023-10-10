@@ -41,9 +41,6 @@ export class Study {
     type: [ResponseWaveDto],
   })
 
-  @OneToMany(() => Wave, (wave) => wave.study, {
-    cascade: ['remove'],
-    onDelete: 'CASCADE',
-  })
+  @OneToMany(() => Wave, (wave) => wave.study)
   waves: Wave[];
 }

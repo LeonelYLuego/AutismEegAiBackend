@@ -17,6 +17,13 @@ export class StudiesService {
     private wavesService: WavesService,
   ) {}
 
+  // Rename and delete columns
+  private renameColumns(row: any, old_name: any, new_name: any): any {
+    row[new_name] = row[old_name];
+    delete row[old_name];
+    return row;
+  }
+
   private async saveWaves(
     files: {
       alfa: Express.Multer.File;
@@ -30,37 +37,43 @@ export class StudiesService {
 
     // Iterate over files
     for (const [key, file] of Object.entries(files)) {
-      // Get wave type from key
-      const waveType = key as keyof typeof files;
-      const stream = Readable.from(files[waveType].buffer.toString());
+      
+      const stream = Readable.from(file[0].buffer.toString());
 
       await new Promise<void>((resolve, reject) => {
-
         fastcsv
           .parseStream(stream, { headers: true })
           .on('data', async (row: any) => {
-            console.log(row);
-            // Delete Epoch, Event Id, Event Date, Event Duration columns
-            delete row.epoch;
-            delete row.event_id;
-            delete row.event_date;
-            delete row.event_duration;
+            delete row.Epoch;
+            delete row['Event Id'];
+            delete row['Event Date'];
+            delete row['Event Duration'];
+            row = this.renameColumns(row, 'Time:128Hz', 'time');
+            row = this.renameColumns(row, 'Channel 1', 'channel1');
+            row = this.renameColumns(row, 'Channel 2', 'channel2');
+            row = this.renameColumns(row, 'Channel 3', 'channel3');
+            row = this.renameColumns(row, 'Channel 4', 'channel4');
+            row = this.renameColumns(row, 'Channel 5', 'channel5');
+            row = this.renameColumns(row, 'Channel 6', 'channel6');
+            row = this.renameColumns(row, 'Channel 7', 'channel7');
+            row = this.renameColumns(row, 'Channel 8', 'channel8');
+            row = this.renameColumns(row, 'Channel 9', 'channel9');
+            row = this.renameColumns(row, 'Channel 10', 'channel10');
+            row = this.renameColumns(row, 'Channel 11', 'channel11');
+            row = this.renameColumns(row, 'Channel 12', 'channel12');
+            row = this.renameColumns(row, 'Channel 13', 'channel13');
+            row = this.renameColumns(row, 'Channel 14', 'channel14');
 
             // Check if row is empty
             if (Object.keys(row).length === 0) return;
-            // Parse all colum names to lowercase
-            Object.keys(row).forEach(function (key) {
-              row[key.toLowerCase()] = row[key];
-              delete row[key];
-            });
             // Add study id to row
             row.study = study;
 
             // Add wave type to row
-            row.type = waveType;
+            row.type = key;
 
             // Add Wave in the database
-            // await this.wavesService.create(row as CreateWaveDto);
+            await this.wavesService.create(row as CreateWaveDto);
           })
           .on('error', (error) => reject(error))
           .on('end', () => {
