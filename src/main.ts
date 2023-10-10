@@ -21,11 +21,8 @@ async function bootstrap() {
   });
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new ExceptionsFilter(app.get(HttpAdapterHost)));
-<<<<<<< HEAD
-=======
   app.use(bodyParser.json({ limit: '10mb' }));
   app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
->>>>>>> 9f06da5799a6f9cc5204483af963df33b9653186
   await app.listen(3001);
 }
 bootstrap();

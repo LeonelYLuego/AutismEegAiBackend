@@ -18,52 +18,35 @@ export class StudiesService {
   ) {}
 
   private async saveWaves(
-    csv: Express.Multer.File,
+    files: {
+      alfa: Express.Multer.File;
+      beta: Express.Multer.File;
+      gamma: Express.Multer.File;
+      delta: Express.Multer.File;
+      theta: Express.Multer.File;
+    },
     study: Study,
   ): Promise<void> {
-    const stream = Readable.from(csv.buffer.toString());
-
-    await new Promise<void>((resolve, reject) => {
-
-      let time:number = 0;
-
-      fastcsv
-        .parseStream(stream, { headers: true })
-        .on('data', async (row: any) => {
-          // Check if row is empty
-          if (Object.keys(row).length === 0) return;
-          // // Parse all colum names to lowercase
-          Object.keys(row).forEach(function (key) {
-            row[key.toLowerCase()] = row[key];
-            delete row[key];
-          });
-          // Add study id to row
-          row.study = study;
-
-          // Add time to row
-          row.time = time;
-
-          // Add 1/16 to time
-          time += 0.0625;
-
-          // Add Wave in the database
-          await this.wavesService.create(row as CreateWaveDto);
-        })
-        .on('error', (error) => reject(error))
-        .on('end', () => {
-          resolve();
-        });
-    });
+    
   }
 
-  async create(patient_id: string, csv: Express.Multer.File): Promise<Study> {
+  async create(
+    patient_id: string, 
+    files: {
+      alfa: Express.Multer.File;
+      beta: Express.Multer.File;
+      gamma: Express.Multer.File;
+      delta: Express.Multer.File;
+      theta: Express.Multer.File;
+    }
+  ): Promise<Study> {
     const patient = await this.patientsService.findOne(patient_id);
     const study = await this.studiesRepository.save({
       patient,
     });
 
-    // Get data from csv
-    await this.saveWaves(csv, study);
+    // Get data from files
+    await this.saveWaves(files, study);
 
     // return retStudy;
     return await this.findOne(study.id);

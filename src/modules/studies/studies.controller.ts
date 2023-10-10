@@ -6,9 +6,9 @@ import {
   Body,
   Param,
   UseInterceptors,
-  UploadedFile,
   ParseFilePipe,
   FileTypeValidator,
+  UploadedFiles,
 } from '@nestjs/common';
 import { StudiesService } from './studies.service';
 import { CreateStudyDto } from './dto/create-study.dto';
@@ -16,7 +16,7 @@ import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Doc } from '@utils/decorators/doc.decorator';
 import { Study } from './entities/study.entity';
 import { HttpResponse } from '@utils/dto/http-response.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ResponseStudyDto } from './dto/response-study.dto';
 
 @ApiTags('Studies')
@@ -33,19 +33,31 @@ export class StudiesController {
     errorStatus: ['400', '404'],
     http201: Study,
   })
-  @UseInterceptors(FileInterceptor('csv'))
+  @UseInterceptors(FileFieldsInterceptor([
+    { name: 'alfa', maxCount: 1 },
+    { name: 'beta', maxCount: 1 },
+    { name: 'gamma', maxCount: 1 },
+    { name: 'delta', maxCount: 1 },
+    { name: 'theta', maxCount: 1 },
+  ]))
   async create(
     @Param('patient_id') patient_id: string,
     @Body() createStudyDto: CreateStudyDto,
-    @UploadedFile(
+    @UploadedFiles(
       new ParseFilePipe({
         validators: [new FileTypeValidator({ fileType: 'csv' })],
       }),
     )
-    csv: Express.Multer.File,
+    files: {
+      alfa: Express.Multer.File;
+      beta: Express.Multer.File;
+      gamma: Express.Multer.File;
+      delta: Express.Multer.File;
+      theta: Express.Multer.File;
+    },
   ): Promise<HttpResponse<Study>> {
     return {
-      data: await this.studiesService.create(patient_id, csv),
+      data: await this.studiesService.create(patient_id, files),
     };
   }
 
@@ -80,11 +92,6 @@ export class StudiesController {
       data: await this.studiesService.findOne(id, patient_id),
     };
   }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateStudyDto: UpdateStudyDto) {
-  //   return this.studiesService.update(+id, updateStudyDto);
-  // }
 
   @Delete(':patient_id/:id')
   @Doc({
