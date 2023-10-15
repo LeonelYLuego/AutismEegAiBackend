@@ -48,7 +48,7 @@ export class StudiesService {
             delete row['Event Id'];
             delete row['Event Date'];
             delete row['Event Duration'];
-            row = this.renameColumns(row, 'Time:128Hz', 'time');
+            row = this.renameColumns(row, 'Time:256Hz', 'time');
             row = this.renameColumns(row, 'Channel 1', 'channel1');
             row = this.renameColumns(row, 'Channel 2', 'channel2');
             row = this.renameColumns(row, 'Channel 3', 'channel3');
