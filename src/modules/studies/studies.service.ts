@@ -112,7 +112,7 @@ export class StudiesService {
         patient,
       },
       order: {
-        created_on: 'DESC'
+        createdOn: 'DESC'
       }
     });
   }

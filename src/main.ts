@@ -20,7 +20,6 @@ async function bootstrap() {
     swaggerOptions: { defaultModelsExpandDepth: -1 },
   });
   app.useGlobalPipes(new ValidationPipe());
-  app.useGlobalFilters(new ExceptionsFilter(app.get(HttpAdapterHost)));
   app.use(bodyParser.json({ limit: '10mb' }));
   app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
   await app.listen(3001);

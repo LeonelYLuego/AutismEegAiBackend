@@ -33,23 +33,26 @@ export class StudiesController {
     errorStatus: ['400', '404'],
     http201: Study,
   })
-  @UseInterceptors(FileFieldsInterceptor([
-    { name: 'alfa', maxCount: 1 },
-    { name: 'beta', maxCount: 1 },
-    { name: 'gamma', maxCount: 1 },
-    { name: 'delta', maxCount: 1 },
-    { name: 'theta', maxCount: 1 },
-  ]))
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'alfa', maxCount: 1 },
+      { name: 'beta', maxCount: 1 },
+      { name: 'gamma', maxCount: 1 },
+      { name: 'delta', maxCount: 1 },
+      { name: 'theta', maxCount: 1 },
+    ]),
+  )
   async create(
     @Param('patient_id') patient_id: string,
     @Body() createStudyDto: CreateStudyDto,
-    @UploadedFiles()files : {
+    @UploadedFiles()
+    files: {
       alfa: Express.Multer.File;
       beta: Express.Multer.File;
       gamma: Express.Multer.File;
       delta: Express.Multer.File;
       theta: Express.Multer.File;
-    }
+    },
   ): Promise<HttpResponse<Study>> {
     return {
       data: await this.studiesService.create(patient_id, files),
@@ -66,10 +69,8 @@ export class StudiesController {
   })
   async findAll(
     @Param('patient_id') patient_id: string,
-  ): Promise<HttpResponse<ResponseStudyDto[]>> {
-    return {
-      data: await this.studiesService.findAll(patient_id),
-    };
+  ): Promise<ResponseStudyDto[]> {
+    return await this.studiesService.findAll(patient_id);
   }
 
   @Get(':patient_id/:id')
@@ -82,25 +83,22 @@ export class StudiesController {
   async findOne(
     @Param('patient_id') patient_id: string,
     @Param('id') id: string,
-  ): Promise<HttpResponse<Study>> {
-    return {
-      data: await this.studiesService.findOne(id, patient_id),
-    };
+  ): Promise<Study> {
+    return await this.studiesService.findOne(id, patient_id);
   }
 
   @Delete(':patient_id/:id')
   @Doc({
     summary: 'Delete a `Study`',
-    description: 'Deletes a `Study` from the database based on the provided `id`',
+    description:
+      'Deletes a `Study` from the database based on the provided `id`',
     errorStatus: ['404'],
     http200: String,
   })
   async remove(
     @Param('patient_id') patient_id: string,
-    @Param('id') id: string
-    ): Promise<HttpResponse<string>> {
-    return {
-      data: await this.studiesService.remove(id, patient_id),
-    };
+    @Param('id') id: string,
+  ): Promise<void> {
+    await this.studiesService.remove(id, patient_id);
   }
 }

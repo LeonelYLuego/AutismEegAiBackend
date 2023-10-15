@@ -9,11 +9,9 @@ import {
 } from '@nestjs/common';
 import { PatientsService } from './patients.service';
 import { CreatePatientDto } from './dto/create-patient.dto';
-import { UpdatePatientDto } from './dto/update-patient.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Doc } from '@utils/decorators/doc.decorator';
 import { Patient } from './entities/patient.entity';
-import { HttpResponse } from '@utils/dto/http-response.dto';
 
 @ApiTags('Patients')
 @Controller('patients')
@@ -27,12 +25,8 @@ export class PatientsController {
     errorStatus: ['400'],
     http201: Patient,
   })
-  async create(
-    @Body() createPatientDto: CreatePatientDto,
-  ): Promise<HttpResponse<Patient>> {
-    return {
-      data: await this.patientsService.create(createPatientDto),
-    };
+  async create(@Body() createPatientDto: CreatePatientDto): Promise<Patient> {
+    return await this.patientsService.create(createPatientDto);
   }
 
   @Get()
@@ -42,10 +36,8 @@ export class PatientsController {
     errorStatus: [],
     http200: [Patient],
   })
-  async findAll(): Promise<HttpResponse<Patient[]>> {
-    return {
-      data: await this.patientsService.findAll(),
-    };
+  async findAll(): Promise<Patient[]> {
+    return await this.patientsService.findAll();
   }
 
   @Get(':id')
@@ -55,35 +47,34 @@ export class PatientsController {
     errorStatus: ['404'],
     http200: Patient,
   })
-  async findOne(@Param('id') id: string): Promise<HttpResponse<Patient>> {
-    return {
-      data: await this.patientsService.findOne(id),
-    };
+  async findOne(@Param('id') id: string): Promise<Patient> {
+    return await this.patientsService.findOne(id);
   }
 
   @Put(':id')
   @Doc({
     summary: 'Update a `Patient`',
-    description: 'Updates a `Patient` in the database based on the provided `id`',
+    description:
+      'Updates a `Patient` in the database based on the provided `id`',
     errorStatus: ['404'],
     http200: Patient,
   })
-  async update(@Param('id') id: string, @Body() updatePatientDto: CreatePatientDto) {
-    return {
-      data: await this.patientsService.update(id, updatePatientDto),
-    }
+  async update(
+    @Param('id') id: string,
+    @Body() updatePatientDto: CreatePatientDto,
+  ): Promise<Patient> {
+    return await this.patientsService.update(id, updatePatientDto);
   }
 
   @Delete(':id')
   @Doc({
     summary: 'Delete a `Patient`',
-    description: 'Deletes a `Patient` from the database based on the provided `id`',
+    description:
+      'Deletes a `Patient` from the database based on the provided `id`',
     errorStatus: ['404'],
     http200: String,
   })
-  async remove(@Param('id') id: string): Promise<HttpResponse<string>> {
-    return {
-      data: await this.patientsService.remove(id),
-    };
+  async remove(@Param('id') id: string): Promise<void> {
+    await this.patientsService.remove(id);
   }
 }

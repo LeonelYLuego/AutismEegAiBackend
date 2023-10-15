@@ -17,30 +17,104 @@ export class Study {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  // @ApiProperty({
-  //   type: Patient,
-  // })
   @ManyToOne(() => Patient, (patient) => patient.id)
   patient: Patient;
 
   @ApiProperty()
   @CreateDateColumn()
-  created_on: Date;
-
-  @ApiProperty({
-    maxLength: 128,
-    required: false,
-  })
-  @Column({
-    length: 128,
-    nullable: true,
-  })
-  result: string | null;
+  createdOn: Date;
 
   @ApiProperty({
     type: [ResponseWaveDto],
   })
-
   @OneToMany(() => Wave, (wave) => wave.study)
   waves: Wave[];
+
+  @ApiProperty({
+    minimum: 0,
+    maximum: 100,
+    required: false,
+  })
+  @Column({
+    type: 'float',
+    nullable: true,
+  })
+  executiveFunction: number | null;
+
+  @ApiProperty({
+    minimum: 0,
+    maximum: 100,
+    required: false,
+  })
+  @Column({
+    type: 'float',
+    nullable: true,
+  })
+  sensoryProcessing: number | null;
+
+  @ApiProperty({
+    minimum: 0,
+    maximum: 100,
+    required: false,
+  })
+  @Column({
+    type: 'float',
+    nullable: true,
+  })
+  repetitiveBehaviours: number | null;
+
+  @ApiProperty({
+    minimum: 0,
+    maximum: 100,
+    required: false,
+  })
+  @Column({
+    type: 'float',
+    nullable: true,
+  })
+  motorSkills: number | null;
+
+  @ApiProperty({
+    minimum: 0,
+    maximum: 100,
+    required: false,
+  })
+  @Column({
+    type: 'float',
+    nullable: true,
+  })
+  perseverativeThinking: number | null;
+
+  @ApiProperty({
+    minimum: 0,
+    maximum: 100,
+    required: false,
+  })
+  @Column({
+    type: 'float',
+    nullable: true,
+  })
+  socialAwareness: number | null;
+
+  @ApiProperty({
+    minimum: 0,
+    maximum: 100,
+    required: false,
+  })
+  @Column({
+    type: 'float',
+    nullable: true,
+  })
+  verbalNoVerbalCommunication: number | null;
+
+  @ApiProperty({
+    minimum: 0,
+    maximum: 100,
+    required: false,
+  })
+  @Column({
+    type: 'float',
+    nullable: true,
+  })
+  informationProcessing: number | null;
 }

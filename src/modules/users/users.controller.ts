@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ResponseUserDto } from './dto/response-user.dto';
@@ -19,12 +19,8 @@ export class UsersController {
     bearer: false,
     http201: ResponseUserDto,
   })
-  async create(
-    @Body() createUserDto: CreateUserDto,
-  ): Promise<HttpResponse<ResponseUserDto>> {
-    return {
-      data: await this.usersService.create(createUserDto),
-    };
+  async create(@Body() createUserDto: CreateUserDto): Promise<ResponseUserDto> {
+    return await this.usersService.create(createUserDto);
   }
 
   @Get()
@@ -35,9 +31,18 @@ export class UsersController {
     http200: Boolean,
     bearer: false,
   })
-  async findAll(): Promise<HttpResponse<boolean>> {
-    return {
-      data: (await this.usersService.findAll()).length > 0,
-    };
+  async findAll(): Promise<boolean> {
+    return (await this.usersService.findAll()).length > 0;
+  }
+
+  @Delete()
+  @Doc({
+    summary: 'Delete the registered `User`',
+    description: 'Deletes the registered `User` in the database',
+    errorStatus: [],
+    bearer: false,
+  })
+  async remove(): Promise<void> {
+    await this.usersService.remove();
   }
 }

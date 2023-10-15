@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Doc } from '@utils/decorators/doc.decorator';
-import { HttpResponse } from '@utils/dto/http-response.dto';
 import { ResponseLogInDto } from './dto/response-log-in.dto';
 import { LogInDto } from './dto/log-in.dto';
 import { AuthService } from './auth.service';
@@ -23,12 +22,8 @@ export class AuthController {
     http201: ResponseLogInDto,
     bearer: false,
   })
-  async logIn(
-    @Body() logInDto: LogInDto,
-  ): Promise<HttpResponse<ResponseLogInDto>> {
-    return {
-      data: await this.authService.logIn(logInDto),
-    };
+  async logIn(@Body() logInDto: LogInDto): Promise<ResponseLogInDto> {
+    return await this.authService.logIn(logInDto);
   }
 
   @Get('logged')
@@ -38,9 +33,7 @@ export class AuthController {
     errorStatus: [],
     http200: ResponseUserDto,
   })
-  logged(@CurrentUser() currentUser: User): HttpResponse<ResponseUserDto> {
-    return {
-      data: currentUser,
-    };
+  logged(@CurrentUser() currentUser: User): ResponseUserDto {
+    return currentUser;
   }
 }

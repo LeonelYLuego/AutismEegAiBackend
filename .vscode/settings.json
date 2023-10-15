@@ -28,7 +28,9 @@
         "tsconfig.build.json"
     ],
     "cSpell.words": [
+        "Behaviours",
         "fastcsv",
+        "perseverative",
         "postgres",
         "typeorm"
     ]
