@@ -105,7 +105,7 @@ export class StudiesService {
     await this.saveWaves(files, study);
 
     // Send a post request to the ML API
-    await firstValueFrom(this.httpService.post('http://localhost:3002/api/waves', {study_id: study.id}));
+    await firstValueFrom(this.httpService.post('http://127.0.0.1:3002/api/waves', {study_id: study.id}));
 
     // return retStudy;
     return await this.findOne(study.id);
@@ -133,6 +133,9 @@ export class StudiesService {
           id,
           patient,
         },
+        relations: {
+          waves: true
+        }
       });
       if (study) return study;
     } catch {}
