@@ -6,15 +6,12 @@ import {
   Body,
   Param,
   UseInterceptors,
-  ParseFilePipe,
-  FileTypeValidator,
   UploadedFiles,
 } from '@nestjs/common';
 import { StudiesService } from './studies.service';
 import { CreateStudyDto } from './dto/create-study.dto';
 import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Doc } from '@utils/decorators/doc.decorator';
-import { Study } from './entities/study.entity';
 import { HttpResponse } from '@utils/dto/http-response.dto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ResponseStudyDto } from './dto/response-study.dto';
@@ -31,7 +28,7 @@ export class StudiesController {
     description:
       'Creates a new `Study` in the database for the provided `Patient`',
     errorStatus: ['400', '404'],
-    http201: Study,
+    http201: ResponseStudyDto,
   })
   @UseInterceptors(
     FileFieldsInterceptor([
@@ -53,7 +50,7 @@ export class StudiesController {
       delta: Express.Multer.File;
       theta: Express.Multer.File;
     },
-  ): Promise<HttpResponse<Study>> {
+  ): Promise<HttpResponse<ResponseStudyDto>> {
     return {
       data: await this.studiesService.create(patient_id, files),
     };
@@ -78,12 +75,12 @@ export class StudiesController {
     summary: 'Find a `Study`',
     description: 'Finds in the database a `Study` or the provided `Patient`',
     errorStatus: ['404'],
-    http200: Study,
+    http200: ResponseStudyDto,
   })
   async findOne(
     @Param('patient_id') patient_id: string,
     @Param('id') id: string,
-  ): Promise<Study> {
+  ): Promise<ResponseStudyDto> {
     return await this.studiesService.findOne(id, patient_id);
   }
 

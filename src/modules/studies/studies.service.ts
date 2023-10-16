@@ -8,6 +8,8 @@ import { PatientsService } from '@patients/patients.service';
 import { Patient } from '@patients/entities/patient.entity';
 import { CreateWaveDto } from '@waves/dto/create-wave.dto';
 import { WavesService } from '@waves/waves.service';
+import { HttpService } from '@nestjs/axios';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class StudiesService {
@@ -15,6 +17,7 @@ export class StudiesService {
     @InjectRepository(Study) private studiesRepository: Repository<Study>,
     private patientsService: PatientsService,
     private wavesService: WavesService,
+    private httpService: HttpService,
   ) {}
 
   // Rename and delete columns
@@ -101,6 +104,9 @@ export class StudiesService {
     // Get data from files
     await this.saveWaves(files, study);
 
+    // Send a post request to the ML API
+    await firstValueFrom(this.httpService.post('http://localhost:3002/api/waves', {study_id: study.id}));
+
     // return retStudy;
     return await this.findOne(study.id);
   }
@@ -126,9 +132,6 @@ export class StudiesService {
         where: {
           id,
           patient,
-        },
-        relations: {
-          waves: true,
         },
       });
       if (study) return study;

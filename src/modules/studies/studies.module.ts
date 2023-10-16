@@ -5,12 +5,19 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Study } from './entities/study.entity';
 import { PatientsModule } from '@patients/patients.module';
 import { WavesModule } from '@waves/waves.module';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Study]), 
     PatientsModule, 
-    WavesModule
+    WavesModule,
+    HttpModule.registerAsync({
+      useFactory: () => ({
+        timeout: 100000,
+        maxRedirects: 5,
+      }),
+    })
   ],
   controllers: [StudiesController],
   providers: [StudiesService],
