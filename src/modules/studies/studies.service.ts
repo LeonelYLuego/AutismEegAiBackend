@@ -29,18 +29,11 @@ export class StudiesService {
 
   private async saveWaves(
     files: {
-      alfa: Express.Multer.File;
-      beta: Express.Multer.File;
-      gamma: Express.Multer.File;
-      delta: Express.Multer.File;
-      theta: Express.Multer.File;
+      study: Express.Multer.File;
     },
     study: Study,
   ): Promise<void> {
-
-    // Iterate over files
     for (const [key, file] of Object.entries(files)) {
-      
       const stream = Readable.from(file[0].buffer.toString());
 
       await new Promise<void>((resolve, reject) => {
@@ -66,19 +59,13 @@ export class StudiesService {
             row = this.renameColumns(row, 'Channel 12', 'channel12');
             row = this.renameColumns(row, 'Channel 13', 'channel13');
             row = this.renameColumns(row, 'Channel 14', 'channel14');
-
-            // Check if row is empty
             if (Object.keys(row).length === 0) return;
-            // Add study id to row
             row.study = study;
-
-            // Add wave type to row
-            row.type = key;
-
-            // Add Wave in the database
             await this.wavesService.create(row as CreateWaveDto);
           })
-          .on('error', (error) => reject(error))
+          .on('error', (error) => {
+            reject(error)
+          })
           .on('end', () => {
             resolve();
           });
@@ -87,27 +74,25 @@ export class StudiesService {
   }
 
   async create(
-    patient_id: string, 
+    patient_id: string,
     files: {
-      alfa: Express.Multer.File;
-      beta: Express.Multer.File;
-      gamma: Express.Multer.File;
-      delta: Express.Multer.File;
-      theta: Express.Multer.File;
-    }
+      study: Express.Multer.File;
+    },
   ): Promise<Study> {
     const patient = await this.patientsService.findOne(patient_id);
     const study = await this.studiesRepository.save({
+      result: 8,
       patient,
     });
 
-    // Get data from files
     await this.saveWaves(files, study);
 
-    // Send a post request to the ML API
-    await firstValueFrom(this.httpService.post('http://127.0.0.1:3002/api/waves', {study_id: study.id}));
+    // await firstValueFrom(
+    //   this.httpService.post('http://127.0.0.1:3002/api/waves', {
+    //     study_id: study.id,
+    //   }),
+    // );
 
-    // return retStudy;
     return await this.findOne(study.id);
   }
 
@@ -118,8 +103,8 @@ export class StudiesService {
         patient,
       },
       order: {
-        createdOn: 'DESC'
-      }
+        createdOn: 'DESC',
+      },
     });
   }
 
@@ -134,8 +119,8 @@ export class StudiesService {
           patient,
         },
         relations: {
-          waves: true
-        }
+          waves: true,
+        },
       });
       if (study) return study;
     } catch {}
@@ -143,12 +128,12 @@ export class StudiesService {
   }
 
   async remove(id: string, patient_id: string): Promise<string> {
-    try{
+    try {
       const study = await this.findOne(id, patient_id);
-      if(study) console.log("Study found", study.id);
+      if (study) console.log('Study found', study.id);
       await this.studiesRepository.delete(study.id);
-      return "Study deleted successfully."
-    } catch(error){
+      return 'Study deleted successfully.';
+    } catch (error) {
       console.log(error);
     }
     throw new NotFoundException('Error deleting study.');

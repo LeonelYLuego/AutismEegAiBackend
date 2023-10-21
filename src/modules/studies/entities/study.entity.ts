@@ -17,7 +17,9 @@ export class Study {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => Patient, (patient) => patient.id)
+  @ManyToOne(() => Patient, (patient) => patient.id, {
+    onDelete: 'CASCADE',
+  })
   patient: Patient;
 
   @ApiProperty()
@@ -39,82 +41,5 @@ export class Study {
     type: 'float',
     nullable: true,
   })
-  executiveFunction: number | null;
-
-  @ApiProperty({
-    minimum: 0,
-    maximum: 100,
-    required: false,
-  })
-  @Column({
-    type: 'float',
-    nullable: true,
-  })
-  sensoryProcessing: number | null;
-
-  @ApiProperty({
-    minimum: 0,
-    maximum: 100,
-    required: false,
-  })
-  @Column({
-    type: 'float',
-    nullable: true,
-  })
-  repetitiveBehaviours: number | null;
-
-  @ApiProperty({
-    minimum: 0,
-    maximum: 100,
-    required: false,
-  })
-  @Column({
-    type: 'float',
-    nullable: true,
-  })
-  motorSkills: number | null;
-
-  @ApiProperty({
-    minimum: 0,
-    maximum: 100,
-    required: false,
-  })
-  @Column({
-    type: 'float',
-    nullable: true,
-  })
-  perseverativeThinking: number | null;
-
-  @ApiProperty({
-    minimum: 0,
-    maximum: 100,
-    required: false,
-  })
-  @Column({
-    type: 'float',
-    nullable: true,
-  })
-  socialAwareness: number | null;
-
-  @ApiProperty({
-    minimum: 0,
-    maximum: 100,
-    required: false,
-  })
-  @Column({
-    type: 'float',
-    nullable: true,
-  })
-  verbalNoVerbalCommunication: number | null;
-
-  @ApiProperty({
-    minimum: 0,
-    maximum: 100,
-    required: false,
-  })
-  @Column({
-    type: 'float',
-    nullable: true,
-  })
-  informationProcessing: number | null;
+  result: number | null;
 }

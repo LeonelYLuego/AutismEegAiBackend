@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { WaveType } from '@waves/enum/wave-type.enum';
 import { Column } from 'typeorm';
 
 export class ResponseWaveDto {
@@ -14,13 +13,6 @@ export class ResponseWaveDto {
     type: 'float',
   })
   time: number;
-
-  @ApiProperty()
-  @Column({
-    type: 'enum',
-    enum: WaveType,
-  })
-  type: WaveType;
 
   @ApiProperty()
   @Column({

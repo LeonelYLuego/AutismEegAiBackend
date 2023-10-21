@@ -32,11 +32,7 @@ export class StudiesController {
   })
   @UseInterceptors(
     FileFieldsInterceptor([
-      { name: 'alfa', maxCount: 1 },
-      { name: 'beta', maxCount: 1 },
-      { name: 'gamma', maxCount: 1 },
-      { name: 'delta', maxCount: 1 },
-      { name: 'theta', maxCount: 1 },
+      { name: 'study', maxCount: 1 },
     ]),
   )
   async create(
@@ -44,11 +40,7 @@ export class StudiesController {
     @Body() createStudyDto: CreateStudyDto,
     @UploadedFiles()
     files: {
-      alfa: Express.Multer.File;
-      beta: Express.Multer.File;
-      gamma: Express.Multer.File;
-      delta: Express.Multer.File;
-      theta: Express.Multer.File;
+      study: Express.Multer.File;
     },
   ): Promise<HttpResponse<ResponseStudyDto>> {
     return {
