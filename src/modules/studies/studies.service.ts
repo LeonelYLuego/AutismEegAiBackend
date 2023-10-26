@@ -64,7 +64,7 @@ export class StudiesService {
             await this.wavesService.create(row as CreateWaveDto);
           })
           .on('error', (error) => {
-            reject(error)
+            reject(error);
           })
           .on('end', () => {
             resolve();
@@ -81,7 +81,8 @@ export class StudiesService {
   ): Promise<Study> {
     const patient = await this.patientsService.findOne(patient_id);
     const study = await this.studiesRepository.save({
-      result: 8,
+      result:
+      Math.floor(Math.random() * 50),
       patient,
     });
 
