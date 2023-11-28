@@ -36,6 +36,8 @@ export class StudiesService {
     for (const [key, file] of Object.entries(files)) {
       const stream = Readable.from(file[0].buffer.toString());
 
+      const rows: CreateWaveDto[] = [];
+
       await new Promise<void>((resolve, reject) => {
         fastcsv
           .parseStream(stream, { headers: true })
@@ -61,7 +63,8 @@ export class StudiesService {
             row = this.renameColumns(row, 'Channel 14', 'channel14');
             if (Object.keys(row).length === 0) return;
             row.study = study;
-            await this.wavesService.create(row as CreateWaveDto);
+            // await this.wavesService.create(row as CreateWaveDto);
+            rows.push(row);
           })
           .on('error', (error) => {
             reject(error);
@@ -70,6 +73,12 @@ export class StudiesService {
             resolve();
           });
       });
+
+      await Promise.all(
+        rows.map(async (row) => {
+          await this.wavesService.create(row);
+        }),
+      );
     }
   }
 
