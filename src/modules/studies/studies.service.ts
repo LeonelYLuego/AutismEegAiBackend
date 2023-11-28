@@ -81,18 +81,23 @@ export class StudiesService {
   ): Promise<Study> {
     const patient = await this.patientsService.findOne(patient_id);
     const study = await this.studiesRepository.save({
-      result:
-      Math.floor(Math.random() * 50),
       patient,
     });
 
     await this.saveWaves(files, study);
 
-    // await firstValueFrom(
-    //   this.httpService.post('http://127.0.0.1:3002/api/waves', {
-    //     study_id: study.id,
-    //   }),
-    // );
+    const result = await firstValueFrom(
+      this.httpService.post('http://127.0.0.1:3002/api/waves', {
+        study_id: study.id,
+      }),
+    );
+
+    // Set the result data to the study
+    study.result = result.data.result;
+
+    // Save the study
+
+    await this.studiesRepository.save(study);
 
     return await this.findOne(study.id);
   }
